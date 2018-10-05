@@ -72,6 +72,22 @@ suspend fun RocketChatClient.updateProfile(
 }
 
 /**
+ * Get user profile by id.
+ *
+ * @param userId The ID of the user.
+ * @return An [User] profile.
+ */
+suspend fun RocketChatClient.getProfile(userId: String): User {
+    val urlBuilder = requestUrl(restUrl, "users.info")
+            .addQueryParameter("userId", userId)
+
+    val request = requestBuilderForAuthenticatedMethods(urlBuilder.build()).get().build()
+
+    val type = Types.newParameterizedType(RestResult::class.java, User::class.java)
+    return handleRestCall<RestResult<User>>(request, type).result()
+}
+
+/**
  * Updates own basic information for the user.
  *
  * @param email The email address for the user.
